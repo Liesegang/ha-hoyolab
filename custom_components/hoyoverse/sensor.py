@@ -244,7 +244,7 @@ HSR_SENSORS: list[HoyoSensorDescription] = [
     ),
     HoyoSensorDescription(
         key=SENSOR_HSR_GRID_FIGHT,
-        name="Money Wars",
+        name="Currency Wars",
         game=GAME_HSR,
         icon="mdi:cash-multiple",
         state_class=SensorStateClass.MEASUREMENT,

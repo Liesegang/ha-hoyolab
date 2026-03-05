@@ -92,7 +92,7 @@ SENSOR_HSR_ECHO_OF_WAR = "hsr_echo_of_war"
 SENSOR_HSR_EXPEDITIONS = "hsr_expeditions"
 SENSOR_HSR_ROGUE = "hsr_simulated_universe"
 SENSOR_HSR_ROGUE_TOURN = "hsr_divergent_universe"
-SENSOR_HSR_GRID_FIGHT = "hsr_money_wars"
+SENSOR_HSR_GRID_FIGHT = "hsr_currency_wars"
 
 # ZZZ
 SENSOR_ZZZ_ENERGY = "zzz_battery_charge"

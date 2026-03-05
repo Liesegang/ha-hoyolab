@@ -4,6 +4,13 @@
  * Supports: Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, Honkai Impact 3rd
  */
 
+// doneWhen values:
+//   "max"     - done when val >= max
+//   "zero"    - done when val <= 0
+//   "done"    - done when text val is "Done"
+//   "hasTime" - done when val is not "Ready" and not "Not obtained" (transformer)
+//   null      - no done highlighting
+
 const GAME_CONFIG = {
   genshin: {
     name: "Genshin Impact",
@@ -11,11 +18,11 @@ const GAME_CONFIG = {
     emoji: "\u{1F33F}",
     stamina: { entityId: "sensor.genshin_resin", label: "Original Resin", max: 200, icon: "\u{1F9EA}" },
     extras: [
-      { entityId: "sensor.genshin_commissions", label: "Commissions", max_attr: "total", icon: "\u{1F4CB}" },
-      { entityId: "sensor.genshin_realm_currency", label: "Realm Currency", max_attr: "max_realm_currency", icon: "\u{1F3E0}" },
-      { entityId: "sensor.genshin_trounce_blossom", label: "Trounce Blossom", max_attr: "max", icon: "\u{1F338}" },
-      { entityId: "sensor.genshin_expeditions", label: "Expeditions", max_attr: "max", icon: "\u{1F5FA}\uFE0F", timeAttr: "max_remaining_time" },
-      { entityId: "sensor.genshin_transformer_ready", label: "Transformer", icon: "\u2697\uFE0F", isText: true },
+      { entityId: "sensor.genshin_commissions", label: "Commissions", max_attr: "total", icon: "\u{1F4CB}", doneWhen: "max" },
+      { entityId: "sensor.genshin_realm_currency", label: "Realm Currency", max_attr: "max_realm_currency", icon: "\u{1F3E0}", timeAttr: "recovery_time_seconds" },
+      { entityId: "sensor.genshin_trounce_blossom", label: "Trounce Blossom", max_attr: "max", icon: "\u{1F338}", doneWhen: "zero" },
+      { entityId: "sensor.genshin_expeditions", label: "Expeditions", max_attr: "max", icon: "\u{1F5FA}\uFE0F", timeAttr: "max_remaining_time", doneWhen: "max" },
+      { entityId: "sensor.genshin_transformer_ready", label: "Transformer", icon: "\u2697\uFE0F", isText: true, doneWhen: "hasTime" },
     ],
     recoveryEntityId: "sensor.genshin_resin_recovery_time",
   },
@@ -23,15 +30,14 @@ const GAME_CONFIG = {
     name: "Honkai: Star Rail",
     accent: "#a78bfa",
     emoji: "\u26A1",
-    stamina: { entityId: "sensor.hsr_stamina", label: "Trailblaze Power", max: 300, icon: "\u26A1" },
+    stamina: { entityId: "sensor.hsr_stamina", label: "Trailblaze Power", max: 300, icon: "\u26A1", showReserve: true },
     extras: [
-      { entityId: "sensor.hsr_reserve_stamina", label: "Reserve Power", icon: "\u{1F50B}", isRaw: true },
-      { entityId: "sensor.hsr_daily_training", label: "Daily Training", max_attr: "max", icon: "\u{1F4DA}" },
-      { entityId: "sensor.hsr_echo_of_war", label: "Echo of War", max_attr: "max", icon: "\u2694\uFE0F" },
-      { entityId: "sensor.hsr_simulated_universe", label: "Simulated Universe", max_attr: "max", icon: "\u{1F30C}" },
-      { entityId: "sensor.hsr_divergent_universe", label: "Divergent Universe", max_attr: "max", icon: "\u{1F300}" },
-      { entityId: "sensor.hsr_money_wars", label: "Money Wars", max_attr: "max", icon: "\u{1F4B0}" },
-      { entityId: "sensor.hsr_expeditions", label: "Assignments", max_attr: "max", icon: "\u{1F5FA}\uFE0F" },
+      { entityId: "sensor.hsr_daily_training", label: "Daily Training", max_attr: "max", icon: "\u{1F4DA}", doneWhen: "max" },
+      { entityId: "sensor.hsr_echo_of_war", label: "Echo of War", max_attr: "max", icon: "\u2694\uFE0F", doneWhen: "zero" },
+      { entityId: "sensor.hsr_simulated_universe", label: "Simulated Universe", max_attr: "max", icon: "\u{1F30C}", doneWhen: "max" },
+      { entityId: "sensor.hsr_divergent_universe", label: "Divergent Universe", max_attr: "max", icon: "\u{1F300}", doneWhen: "max" },
+      { entityId: "sensor.hsr_currency_wars", label: "Currency Wars", max_attr: "max", icon: "\u{1F4B0}", doneWhen: "max" },
+      { entityId: "sensor.hsr_expeditions", label: "Assignments", max_attr: "max", icon: "\u{1F5FA}\uFE0F", doneWhen: "max" },
     ],
     recoveryEntityId: "sensor.hsr_stamina_recovery_time",
   },
@@ -41,11 +47,11 @@ const GAME_CONFIG = {
     emoji: "\u{1F50B}",
     stamina: { entityId: "sensor.zzz_battery_charge", label: "Battery Charge", max: 240, icon: "\u{1F50B}" },
     extras: [
-      { entityId: "sensor.zzz_engagement", label: "Engagement", max_attr: "max", icon: "\u{1F4AA}" },
-      { entityId: "sensor.zzz_vhs_store", label: "VHS Store", icon: "\u{1F4FC}", isText: true },
-      { entityId: "sensor.zzz_card_punch", label: "Scratch Card", icon: "\u{1F0CF}", isText: true },
-      { entityId: "sensor.zzz_bounty", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}" },
-      { entityId: "sensor.zzz_weekly_task", label: "Weekly Task", max_attr: "max", icon: "\u{1F4C5}" },
+      { entityId: "sensor.zzz_engagement", label: "Engagement", max_attr: "max", icon: "\u{1F4AA}", doneWhen: "max" },
+      { entityId: "sensor.zzz_vhs_store", label: "VHS Store", icon: "\u{1F4FC}", isText: true, doneWhen: "done" },
+      { entityId: "sensor.zzz_card_punch", label: "Scratch Card", icon: "\u{1F0CF}", isText: true, doneWhen: "done" },
+      { entityId: "sensor.zzz_bounty", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}", doneWhen: "max" },
+      { entityId: "sensor.zzz_weekly_task", label: "Weekly Task", max_attr: "max", icon: "\u{1F4C5}", doneWhen: "max" },
     ],
     recoveryEntityId: "sensor.zzz_battery_recovery_time",
   },
@@ -68,6 +74,24 @@ function secondsToHuman(secs) {
   const m = Math.floor((secs % 3600) / 60);
   if (h > 0) return `${h}h ${m}m`;
   return `${m}m`;
+}
+
+function isDone(val, attrs, e) {
+  if (!e.doneWhen) return null; // no highlighting
+  switch (e.doneWhen) {
+    case "max": {
+      const max = e.max_attr ? attrs[e.max_attr] : null;
+      return max != null && Number(val) >= Number(max);
+    }
+    case "zero":
+      return Number(val) <= 0;
+    case "done":
+      return val === "Done";
+    case "hasTime":
+      return val !== "Ready" && val !== "Not obtained";
+    default:
+      return null;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -121,12 +145,24 @@ class HoyoverseCard extends HTMLElement {
     const recovEntity = this._getEntity(gc.recoveryEntityId);
 
     const current = entity ? Number(entity.state) : null;
-    const max = entity?.attributes?.max_resin
-              ?? entity?.attributes?.max_stamina
-              ?? entity?.attributes?.max
-              ?? staminaCfg.max;
+    const attrs = entity?.attributes || {};
+    const max = attrs.max_resin ?? attrs.max_stamina ?? attrs.max ?? staminaCfg.max;
     const recovery = recovEntity ? Number(recovEntity.state) : null;
     const pct = this._staminaPercent(current, max);
+
+    // Reserve power (HSR) – read from separate entity
+    let reserveHtml = "";
+    if (staminaCfg.showReserve) {
+      const reserveEntity = this._getEntity("sensor.hsr_reserve_stamina");
+      const reserve = reserveEntity ? Number(reserveEntity.state) : null;
+      const reserveFull = reserveEntity?.attributes?.is_full;
+      if (reserve != null) {
+        reserveHtml = `
+          <div class="reserve-info">
+            \u{1F50B} Reserve: ${reserve}/2400${reserveFull ? " (Full)" : ""} <span class="reserve-note">x1/3</span>
+          </div>`;
+      }
+    }
 
     return `
       <div class="stamina-section">
@@ -144,6 +180,7 @@ class HoyoverseCard extends HTMLElement {
             : `\u23F1 ${recovery != null ? secondsToHuman(recovery) : "\u2014"} until full`
           }
         </div>
+        ${reserveHtml}
       </div>`;
   }
 
@@ -155,10 +192,12 @@ class HoyoverseCard extends HTMLElement {
 
         const val = entity.state;
         const attrs = entity.attributes || {};
+        const done = isDone(val, attrs, e);
+        const bgClass = done === true ? "extra-done" : done === false ? "extra-not-done" : "";
 
-        if (e.isText || e.isRaw) {
+        if (e.isText) {
           return `
-            <div class="extra-item">
+            <div class="extra-item ${bgClass}">
               <span class="extra-icon">${e.icon}</span>
               <div class="extra-body">
                 <div class="extra-label">${e.label}</div>
@@ -174,7 +213,7 @@ class HoyoverseCard extends HTMLElement {
         const timeLeft = e.timeAttr && attrs[e.timeAttr] ? secondsToHuman(Number(attrs[e.timeAttr])) : null;
 
         return `
-          <div class="extra-item">
+          <div class="extra-item ${bgClass}">
             <span class="extra-icon">${e.icon}</span>
             <div class="extra-body">
               <div class="extra-label">${e.label}${timeLeft ? ` <span class="extra-time">${timeLeft}</span>` : ""}</div>
@@ -244,6 +283,15 @@ class HoyoverseCard extends HTMLElement {
         transition: width .4s ease;
       }
       .recovery-time { font-size: 12px; color: var(--secondary-text-color, #888); }
+      .reserve-info {
+        font-size: 12px;
+        color: var(--secondary-text-color, #888);
+        margin-top: 4px;
+      }
+      .reserve-note {
+        opacity: 0.6;
+        font-size: 11px;
+      }
 
       /* Extras */
       .extras-grid {
@@ -260,6 +308,14 @@ class HoyoverseCard extends HTMLElement {
         display: flex;
         align-items: flex-start;
         gap: 8px;
+      }
+      .extra-done {
+        background: rgba(52, 211, 153, 0.12);
+        border-color: rgba(52, 211, 153, 0.25);
+      }
+      .extra-not-done {
+        background: rgba(248, 113, 113, 0.12);
+        border-color: rgba(248, 113, 113, 0.25);
       }
       .extra-icon { font-size: 16px; margin-top: 1px; }
       .extra-body { flex: 1; min-width: 0; }
@@ -316,6 +372,6 @@ window.customCards.push({
 
 console.info(
   `%c HOYOVERSE-CARD %c v1.0.0 `,
-  "color:#fff;background:#e2b96f;font-weight:bold;padding:2px 6px;border-radius:3px 0 0 3px",
-  "color:#e2b96f;background:#1a1a1a;padding:2px 6px;border-radius:0 3px 3px 0"
+  "color:#fff;background:#5b9bd5;font-weight:bold;padding:2px 6px;border-radius:3px 0 0 3px",
+  "color:#5b9bd5;background:#1a1a1a;padding:2px 6px;border-radius:0 3px 3px 0"
 );
