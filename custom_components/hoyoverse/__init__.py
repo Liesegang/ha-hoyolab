@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from homeassistant.components.frontend import add_extra_js_url
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -15,10 +16,11 @@ CARD_FILE = Path(__file__).parent / "hoyoverse-card.js"
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
-    """Register the static path for the card JS."""
+    """Register the static path and Lovelace resource for the card JS."""
     await hass.http.async_register_static_paths(
         [StaticPathConfig(CARD_URL, str(CARD_FILE), cache_headers=False)]
     )
+    add_extra_js_url(hass, CARD_URL)
     return True
 
 

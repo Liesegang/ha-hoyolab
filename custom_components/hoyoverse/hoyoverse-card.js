@@ -121,6 +121,14 @@ class HoyoverseCard extends HTMLElement {
 
   getCardSize() { return 3; }
 
+  static getStubConfig() {
+    return { game: "genshin" };
+  }
+
+  static getConfigElement() {
+    return document.createElement("hoyoverse-card-editor");
+  }
+
   _getEntity(entityId) {
     if (!this._hass) return null;
     return this._hass.states[entityId] ?? null;
@@ -176,9 +184,9 @@ class HoyoverseCard extends HTMLElement {
         ${this._renderProgressBar(pct, gc.accent)}
         <div class="recovery-time">
           ${pct >= 100
-            ? `<span style="color:var(--success-color, #34d399)">\u25CF Full</span>`
-            : `\u23F1 ${recovery != null ? secondsToHuman(recovery) : "\u2014"} until full`
-          }
+        ? `<span style="color:var(--success-color, #34d399)">\u25CF Full</span>`
+        : `\u23F1 ${recovery != null ? secondsToHuman(recovery) : "\u2014"} until full`
+      }
         </div>
         ${reserveHtml}
       </div>`;
@@ -360,6 +368,75 @@ class HoyoverseCard extends HTMLElement {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Visual Config Editor
+// ---------------------------------------------------------------------------
+
+class HoyoverseCardEditor extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this._config = {};
+  }
+
+  setConfig(config) {
+    this._config = { ...config };
+    this._render();
+  }
+
+  set hass(hass) {
+    this._hass = hass;
+  }
+
+  _render() {
+    const games = Object.entries(GAME_CONFIG).map(
+      ([key, gc]) => `<option value="${key}" ${this._config.game === key ? "selected" : ""}>${gc.emoji} ${gc.name}</option>`
+    ).join("");
+
+    this.shadowRoot.innerHTML = `
+      <style>
+        .editor { padding: 16px; }
+        .field { margin-bottom: 12px; }
+        label {
+          display: block;
+          font-size: 13px;
+          font-weight: 500;
+          color: var(--primary-text-color, #333);
+          margin-bottom: 4px;
+        }
+        select {
+          width: 100%;
+          padding: 8px 12px;
+          border-radius: 8px;
+          border: 1px solid var(--divider-color, #ccc);
+          background: var(--input-fill-color, #fff);
+          color: var(--primary-text-color, #333);
+          font-size: 14px;
+          cursor: pointer;
+        }
+      </style>
+      <div class="editor">
+        <div class="field">
+          <label>Game</label>
+          <select id="game-select">
+            ${games}
+          </select>
+        </div>
+      </div>`;
+
+    this.shadowRoot.getElementById("game-select")
+      .addEventListener("change", (ev) => {
+        this._config = { ...this._config, game: ev.target.value };
+        this.dispatchEvent(new CustomEvent("config-changed", {
+          detail: { config: this._config },
+          bubbles: true,
+          composed: true,
+        }));
+      });
+  }
+}
+
+customElements.define("hoyoverse-card-editor", HoyoverseCardEditor);
 customElements.define("hoyoverse-card", HoyoverseCard);
 
 window.customCards = window.customCards || [];
