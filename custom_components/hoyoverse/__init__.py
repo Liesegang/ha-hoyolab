@@ -4,7 +4,6 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from homeassistant.components.frontend import async_register_built_in_panel
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -31,17 +30,17 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 async def _register_card_resource(hass: HomeAssistant) -> None:
     """Add the card JS as a Lovelace resource if not already registered."""
-    # Wait for lovelace to be available
     if "lovelace" not in hass.data:
         return
 
     try:
-        resources = hass.data["lovelace"].get("resources")
+        lovelace_data = hass.data["lovelace"]
+        resources = lovelace_data.resources
         if resources is None:
             return
 
         # Check if already registered
-        existing = await resources.async_get_info()
+        existing = resources.async_items()
         for resource in existing:
             if CARD_URL in resource.get("url", ""):
                 return
