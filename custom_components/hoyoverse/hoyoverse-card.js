@@ -7,18 +7,14 @@
 const GAME_CONFIG = {
   genshin: {
     name: "Genshin Impact",
-    accent: "#e2b96f",
-    bg: "linear-gradient(135deg, #1a1005 0%, #2d1f00 100%)",
-    headerBg: "rgba(226,185,111,0.12)",
-    icon: `<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-    </svg>`,
+    accent: "#5b9bd5",
     emoji: "\u{1F33F}",
     stamina: { entityId: "sensor.genshin_resin", label: "Original Resin", max: 200, icon: "\u{1F9EA}" },
     extras: [
       { entityId: "sensor.genshin_commissions", label: "Commissions", max_attr: "total", icon: "\u{1F4CB}" },
       { entityId: "sensor.genshin_realm_currency", label: "Realm Currency", max_attr: "max_realm_currency", icon: "\u{1F3E0}" },
-      { entityId: "sensor.genshin_expeditions", label: "Expeditions", max_attr: "max", icon: "\u{1F5FA}\uFE0F" },
+      { entityId: "sensor.genshin_trounce_blossom", label: "Trounce Blossom", max_attr: "max", icon: "\u{1F338}" },
+      { entityId: "sensor.genshin_expeditions", label: "Expeditions", max_attr: "max", icon: "\u{1F5FA}\uFE0F", timeAttr: "max_remaining_time" },
       { entityId: "sensor.genshin_transformer_ready", label: "Transformer", icon: "\u2697\uFE0F", isText: true },
     ],
     recoveryEntityId: "sensor.genshin_resin_recovery_time",
@@ -26,38 +22,36 @@ const GAME_CONFIG = {
   hsr: {
     name: "Honkai: Star Rail",
     accent: "#a78bfa",
-    bg: "linear-gradient(135deg, #0d0a1a 0%, #1a0d2e 100%)",
-    headerBg: "rgba(167,139,250,0.12)",
     emoji: "\u26A1",
-    stamina: { entityId: "sensor.hsr_stamina", label: "Trailblaze Power", max: 240, icon: "\u26A1" },
+    stamina: { entityId: "sensor.hsr_stamina", label: "Trailblaze Power", max: 300, icon: "\u26A1" },
     extras: [
       { entityId: "sensor.hsr_reserve_stamina", label: "Reserve Power", icon: "\u{1F50B}", isRaw: true },
       { entityId: "sensor.hsr_daily_training", label: "Daily Training", max_attr: "max", icon: "\u{1F4DA}" },
       { entityId: "sensor.hsr_echo_of_war", label: "Echo of War", max_attr: "max", icon: "\u2694\uFE0F" },
+      { entityId: "sensor.hsr_simulated_universe", label: "Simulated Universe", max_attr: "max", icon: "\u{1F30C}" },
+      { entityId: "sensor.hsr_divergent_universe", label: "Divergent Universe", max_attr: "max", icon: "\u{1F300}" },
+      { entityId: "sensor.hsr_money_wars", label: "Money Wars", max_attr: "max", icon: "\u{1F4B0}" },
       { entityId: "sensor.hsr_expeditions", label: "Assignments", max_attr: "max", icon: "\u{1F5FA}\uFE0F" },
     ],
     recoveryEntityId: "sensor.hsr_stamina_recovery_time",
   },
   zzz: {
     name: "Zenless Zone Zero",
-    accent: "#f5d44f",
-    bg: "linear-gradient(135deg, #0a0a05 0%, #1a1800 100%)",
-    headerBg: "rgba(245,212,79,0.10)",
+    accent: "#e8882d",
     emoji: "\u{1F50B}",
     stamina: { entityId: "sensor.zzz_battery_charge", label: "Battery Charge", max: 240, icon: "\u{1F50B}" },
     extras: [
       { entityId: "sensor.zzz_engagement", label: "Engagement", max_attr: "max", icon: "\u{1F4AA}" },
-      { entityId: "sensor.zzz_card_punch", label: "Card Punch", icon: "\u{1F0CF}", isText: true },
+      { entityId: "sensor.zzz_vhs_store", label: "VHS Store", icon: "\u{1F4FC}", isText: true },
+      { entityId: "sensor.zzz_card_punch", label: "Scratch Card", icon: "\u{1F0CF}", isText: true },
       { entityId: "sensor.zzz_bounty", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}" },
-      { entityId: "sensor.zzz_investigation_points", label: "Investigation", max_attr: "max", icon: "\u{1F50D}" },
+      { entityId: "sensor.zzz_weekly_task", label: "Weekly Task", max_attr: "max", icon: "\u{1F4C5}" },
     ],
     recoveryEntityId: "sensor.zzz_battery_recovery_time",
   },
   hi3: {
     name: "Honkai Impact 3rd",
-    accent: "#f87171",
-    bg: "linear-gradient(135deg, #0f0505 0%, #200a0a 100%)",
-    headerBg: "rgba(248,113,113,0.12)",
+    accent: "#7b68ee",
     emoji: "\u{1F300}",
     stamina: { entityId: "sensor.hi3_stamina", label: "Stamina", max: 180, icon: "\u26A1" },
     extras: [
@@ -74,11 +68,6 @@ function secondsToHuman(secs) {
   const m = Math.floor((secs % 3600) / 60);
   if (h > 0) return `${h}h ${m}m`;
   return `${m}m`;
-}
-
-function formatTime(isoOrSecs) {
-  const n = Number(isoOrSecs);
-  return isNaN(n) ? (isoOrSecs ?? "\u2014") : secondsToHuman(n);
 }
 
 // ---------------------------------------------------------------------------
@@ -108,7 +97,6 @@ class HoyoverseCard extends HTMLElement {
 
   getCardSize() { return 3; }
 
-  // Get entity state by exact entity_id
   _getEntity(entityId) {
     if (!this._hass) return null;
     return this._hass.states[entityId] ?? null;
@@ -120,7 +108,7 @@ class HoyoverseCard extends HTMLElement {
   }
 
   _renderProgressBar(pct, accent) {
-    const color = pct >= 100 ? "#34d399" : accent;
+    const color = pct >= 100 ? "var(--success-color, #34d399)" : accent;
     return `
       <div class="bar-track">
         <div class="bar-fill" style="width:${pct}%;background:${color};"></div>
@@ -135,6 +123,7 @@ class HoyoverseCard extends HTMLElement {
     const current = entity ? Number(entity.state) : null;
     const max = entity?.attributes?.max_resin
               ?? entity?.attributes?.max_stamina
+              ?? entity?.attributes?.max
               ?? staminaCfg.max;
     const recovery = recovEntity ? Number(recovEntity.state) : null;
     const pct = this._staminaPercent(current, max);
@@ -144,14 +133,14 @@ class HoyoverseCard extends HTMLElement {
         <div class="stamina-header">
           <span class="stamina-icon">${staminaCfg.icon}</span>
           <span class="stamina-label">${staminaCfg.label}</span>
-          <span class="stamina-value" style="color:${pct >= 100 ? "#34d399" : gc.accent}">
+          <span class="stamina-value" style="color:${pct >= 100 ? "var(--success-color, #34d399)" : gc.accent}">
             ${current ?? "\u2014"}/${max}
           </span>
         </div>
         ${this._renderProgressBar(pct, gc.accent)}
         <div class="recovery-time">
           ${pct >= 100
-            ? `<span style="color:#34d399">\u25CF Full</span>`
+            ? `<span style="color:var(--success-color, #34d399)">\u25CF Full</span>`
             : `\u23F1 ${recovery != null ? secondsToHuman(recovery) : "\u2014"} until full`
           }
         </div>
@@ -167,18 +156,7 @@ class HoyoverseCard extends HTMLElement {
         const val = entity.state;
         const attrs = entity.attributes || {};
 
-        if (e.isText) {
-          return `
-            <div class="extra-item">
-              <span class="extra-icon">${e.icon}</span>
-              <div class="extra-body">
-                <div class="extra-label">${e.label}</div>
-                <div class="extra-val">${val}</div>
-              </div>
-            </div>`;
-        }
-
-        if (e.isRaw) {
+        if (e.isText || e.isRaw) {
           return `
             <div class="extra-item">
               <span class="extra-icon">${e.icon}</span>
@@ -192,13 +170,14 @@ class HoyoverseCard extends HTMLElement {
         const max = e.max_attr ? attrs[e.max_attr] : null;
         const display = max != null ? `${val}/${max}` : val;
         const pct = max ? this._staminaPercent(val, max) : null;
-        const barColor = pct != null && pct >= 100 ? "#34d399" : gc.accent;
+        const barColor = pct != null && pct >= 100 ? "var(--success-color, #34d399)" : gc.accent;
+        const timeLeft = e.timeAttr && attrs[e.timeAttr] ? secondsToHuman(Number(attrs[e.timeAttr])) : null;
 
         return `
           <div class="extra-item">
             <span class="extra-icon">${e.icon}</span>
             <div class="extra-body">
-              <div class="extra-label">${e.label}</div>
+              <div class="extra-label">${e.label}${timeLeft ? ` <span class="extra-time">${timeLeft}</span>` : ""}</div>
               <div class="extra-val" style="color:${barColor}">${display}</div>
               ${pct != null ? `<div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>` : ""}
             </div>
@@ -209,28 +188,22 @@ class HoyoverseCard extends HTMLElement {
 
     return items
       ? `<div class="extras-grid">${items}</div>`
-      : `<div class="no-data">No extra data found.<br>Make sure your entities are configured.</div>`;
+      : "";
   }
 
   _getStyles(gc) {
     return `
       :host { display: block; }
-      .card {
-        background: ${gc.bg};
-        border-radius: 16px;
+      ha-card {
         overflow: hidden;
-        color: #f0f0f0;
         font-family: var(--primary-font-family, sans-serif);
-        box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-        border: 1px solid rgba(255,255,255,0.06);
       }
       .header {
-        background: ${gc.headerBg};
-        border-bottom: 1px solid rgba(255,255,255,0.07);
-        padding: 14px 18px;
+        padding: 14px 16px;
         display: flex;
         align-items: center;
         gap: 10px;
+        border-bottom: 1px solid var(--divider-color, rgba(255,255,255,0.07));
       }
       .header-emoji { font-size: 22px; }
       .header-title {
@@ -247,22 +220,22 @@ class HoyoverseCard extends HTMLElement {
         transition: opacity .2s;
         background: none;
         border: none;
-        color: inherit;
+        color: var(--primary-text-color, #fff);
         padding: 4px;
         border-radius: 6px;
       }
-      .header-refresh:hover { opacity: 1; background: rgba(255,255,255,0.08); }
-      .body { padding: 16px 18px; }
+      .header-refresh:hover { opacity: 1; background: rgba(127,127,127,0.15); }
+      .body { padding: 16px; }
 
       /* Stamina */
       .stamina-section { margin-bottom: 16px; }
       .stamina-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
       .stamina-icon { font-size: 18px; }
-      .stamina-label { flex: 1; font-size: 13px; color: #b0b0b0; }
+      .stamina-label { flex: 1; font-size: 13px; color: var(--secondary-text-color, #b0b0b0); }
       .stamina-value { font-size: 20px; font-weight: 700; }
       .bar-track {
         height: 8px; border-radius: 99px;
-        background: rgba(255,255,255,0.08);
+        background: var(--divider-color, rgba(255,255,255,0.08));
         overflow: hidden;
         margin-bottom: 6px;
       }
@@ -270,7 +243,7 @@ class HoyoverseCard extends HTMLElement {
         height: 100%; border-radius: 99px;
         transition: width .4s ease;
       }
-      .recovery-time { font-size: 12px; color: #888; }
+      .recovery-time { font-size: 12px; color: var(--secondary-text-color, #888); }
 
       /* Extras */
       .extras-grid {
@@ -280,8 +253,8 @@ class HoyoverseCard extends HTMLElement {
         margin-top: 4px;
       }
       .extra-item {
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.07);
+        background: var(--input-fill-color, rgba(127,127,127,0.08));
+        border: 1px solid var(--divider-color, rgba(255,255,255,0.07));
         border-radius: 10px;
         padding: 10px 12px;
         display: flex;
@@ -290,21 +263,16 @@ class HoyoverseCard extends HTMLElement {
       }
       .extra-icon { font-size: 16px; margin-top: 1px; }
       .extra-body { flex: 1; min-width: 0; }
-      .extra-label { font-size: 11px; color: #888; margin-bottom: 3px; }
-      .extra-val { font-size: 14px; font-weight: 600; }
+      .extra-label { font-size: 11px; color: var(--secondary-text-color, #888); margin-bottom: 3px; }
+      .extra-time { opacity: 0.7; }
+      .extra-val { font-size: 14px; font-weight: 600; color: var(--primary-text-color, #f0f0f0); }
       .mini-bar-track {
         height: 4px; border-radius: 99px;
-        background: rgba(255,255,255,0.08);
+        background: var(--divider-color, rgba(255,255,255,0.08));
         overflow: hidden;
         margin-top: 5px;
       }
       .mini-bar-fill { height: 100%; border-radius: 99px; }
-      .no-data { color: #666; font-size: 13px; text-align: center; padding: 16px 0; }
-      .section-divider {
-        height: 1px;
-        background: rgba(255,255,255,0.06);
-        margin: 14px 0;
-      }
     `;
   }
 
@@ -314,7 +282,7 @@ class HoyoverseCard extends HTMLElement {
 
     const body = `
       <style>${this._getStyles(gc)}</style>
-      <div class="card">
+      <ha-card>
         <div class="header">
           <span class="header-emoji">${gc.emoji}</span>
           <span class="header-title">${gc.name}</span>
@@ -322,10 +290,9 @@ class HoyoverseCard extends HTMLElement {
         </div>
         <div class="body">
           ${this._renderStamina(gc)}
-          <div class="section-divider"></div>
           ${this._renderExtras(gc)}
         </div>
-      </div>`;
+      </ha-card>`;
 
     this.shadowRoot.innerHTML = body;
     this.shadowRoot
