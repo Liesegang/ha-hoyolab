@@ -357,6 +357,8 @@ class HoyoSensor(CoordinatorEntity[HoyoverseCoordinator], SensorEntity):
         self.entity_description = description
         self._attr_unique_id = f"{entry_id}_{description.key}"
         self._attr_has_entity_name = True
+        # Ensure entity_id is sensor.<key> (e.g. sensor.genshin_resin)
+        self.entity_id = f"sensor.{description.key}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{entry_id}_{description.game}")},
             name=GAME_NAMES[description.game],
