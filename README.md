@@ -26,13 +26,15 @@ Home Assistant integration + Lovelace card for **Genshin Impact**, **Honkai: Sta
 
 ### HACS (recommended)
 
-1. In HACS → **Integrations**, search **HoYoverse** → Install
-2. In HACS → **Frontend (Dashboard)**, search **HoYoverse Card** → Install
+1. In HACS → **Integrations** → Add custom repository → enter this repo URL → Category: **Integration**
+2. Search **HoYoverse** → Install
 3. Restart Home Assistant
+
+The Lovelace card is bundled with the integration — no separate frontend install needed.
 
 ### Manual
 
-Copy `custom_components/hoyoverse/` to your HA config and add `dist/hoyoverse-card.js` as a Lovelace resource.
+Copy `custom_components/hoyoverse/` into your Home Assistant `config/custom_components/` directory and restart.
 
 ---
 
@@ -54,6 +56,8 @@ Copy `custom_components/hoyoverse/` to your HA config and add `dist/hoyoverse-ca
 
 ### 3. Add the card
 
+Add via the Lovelace UI card picker (**HoYoverse Card**) or manually in YAML:
+
 ```yaml
 type: custom:hoyoverse-card
 game: genshin   # genshin | hsr | zzz | hi3
@@ -71,7 +75,7 @@ game: genshin   # genshin | hsr | zzz | hi3
 
 ## Sensors Created
 
-All sensors are prefixed with `sensor.hoyoverse_`.
+Entity IDs follow the pattern `sensor.<key>` (e.g. `sensor.genshin_resin`).
 
 ### Genshin Impact
 - `genshin_resin` — Current Original Resin
