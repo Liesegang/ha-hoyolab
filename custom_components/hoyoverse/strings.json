@@ -1,0 +1,36 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "HoYoLAB Credentials",
+        "description": "Enter your HoYoLAB cookie values.\n\nOpen hoyolab.com -> F12 -> Console -> type: document.cookie\nCopy the ltoken_v2 and ltuid_v2 values.",
+        "data": {
+          "ltoken": "ltoken_v2",
+          "ltuid": "ltuid_v2"
+        }
+      },
+      "games": {
+        "title": "Game Configuration",
+        "description": "Enter the UID and server for each game you want to track. Leave blank to skip a game.",
+        "data": {
+          "genshin_uid": "Genshin Impact UID",
+          "genshin_server": "Genshin Impact Server",
+          "hsr_uid": "Honkai: Star Rail UID",
+          "hsr_server": "Honkai: Star Rail Server",
+          "zzz_uid": "Zenless Zone Zero UID",
+          "zzz_server": "Zenless Zone Zero Server",
+          "hi3_uid": "Honkai Impact 3rd UID",
+          "hi3_server": "Honkai Impact 3rd Server"
+        }
+      }
+    },
+    "error": {
+      "invalid_cookie": "Invalid cookie. Please check your ltoken_v2 and ltuid_v2 values.",
+      "cannot_connect": "Cannot connect to HoYoLAB. Please check your network connection.",
+      "uid_server_mismatch": "If you enter a UID, you must also select a server (and vice versa)."
+    },
+    "abort": {
+      "already_configured": "This account is already configured."
+    }
+  }
+}
