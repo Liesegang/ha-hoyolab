@@ -7,6 +7,7 @@
 const GAME_CONFIG = {
   genshin: {
     name: "Genshin Impact",
+    entityPrefix: "genshin_impact",
     accent: "#e2b96f",
     bg: "linear-gradient(135deg, #1a1005 0%, #2d1f00 100%)",
     headerBg: "rgba(226,185,111,0.12)",
@@ -14,57 +15,60 @@ const GAME_CONFIG = {
       <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
     </svg>`,
     emoji: "\u{1F33F}",
-    stamina: { entitySuffix: "genshin_resin", label: "Original Resin", max: 200, icon: "\u{1F9EA}" },
+    stamina: { entitySuffix: "original_resin", label: "Original Resin", max: 200, icon: "\u{1F9EA}" },
     extras: [
-      { entitySuffix: "genshin_commissions", label: "Commissions", max_attr: "total", icon: "\u{1F4CB}" },
-      { entitySuffix: "genshin_realm_currency", label: "Realm Currency", max_attr: "max_realm_currency", icon: "\u{1F3E0}" },
-      { entitySuffix: "genshin_expeditions", label: "Expeditions", max_attr: "max", icon: "\u{1F5FA}\uFE0F" },
-      { entitySuffix: "genshin_transformer_ready", label: "Transformer", icon: "\u2697\uFE0F", isText: true },
+      { entitySuffix: "daily_commissions", label: "Commissions", max_attr: "total", icon: "\u{1F4CB}" },
+      { entitySuffix: "realm_currency", label: "Realm Currency", max_attr: "max_realm_currency", icon: "\u{1F3E0}" },
+      { entitySuffix: "expeditions", label: "Expeditions", max_attr: "max", icon: "\u{1F5FA}\uFE0F" },
+      { entitySuffix: "parametric_transformer", label: "Transformer", icon: "\u2697\uFE0F", isText: true },
     ],
-    recoveryEntitySuffix: "genshin_resin_recovery_time",
+    recoveryEntitySuffix: "resin_recovery_time",
   },
   hsr: {
     name: "Honkai: Star Rail",
+    entityPrefix: "honkai_star_rail",
     accent: "#a78bfa",
     bg: "linear-gradient(135deg, #0d0a1a 0%, #1a0d2e 100%)",
     headerBg: "rgba(167,139,250,0.12)",
     emoji: "\u26A1",
-    stamina: { entitySuffix: "hsr_stamina", label: "Trailblaze Power", max: 240, icon: "\u26A1" },
+    stamina: { entitySuffix: "trailblaze_power", label: "Trailblaze Power", max: 240, icon: "\u26A1" },
     extras: [
-      { entitySuffix: "hsr_reserve_stamina", label: "Reserve Power", icon: "\u{1F50B}", isRaw: true },
-      { entitySuffix: "hsr_daily_training", label: "Daily Training", max_attr: "max", icon: "\u{1F4DA}" },
-      { entitySuffix: "hsr_echo_of_war", label: "Echo of War", max_attr: "max", icon: "\u2694\uFE0F" },
-      { entitySuffix: "hsr_expeditions", label: "Assignments", max_attr: "max", icon: "\u{1F5FA}\uFE0F" },
+      { entitySuffix: "reserve_trailblaze_power", label: "Reserve Power", icon: "\u{1F50B}", isRaw: true },
+      { entitySuffix: "daily_training", label: "Daily Training", max_attr: "max", icon: "\u{1F4DA}" },
+      { entitySuffix: "echo_of_war_weekly", label: "Echo of War", max_attr: "max", icon: "\u2694\uFE0F" },
+      { entitySuffix: "assignments", label: "Assignments", max_attr: "max", icon: "\u{1F5FA}\uFE0F" },
     ],
-    recoveryEntitySuffix: "hsr_stamina_recovery_time",
+    recoveryEntitySuffix: "trailblaze_power_recovery",
   },
   zzz: {
     name: "Zenless Zone Zero",
+    entityPrefix: "zenless_zone_zero",
     accent: "#f5d44f",
     bg: "linear-gradient(135deg, #0a0a05 0%, #1a1800 100%)",
     headerBg: "rgba(245,212,79,0.10)",
     emoji: "\u{1F50B}",
-    stamina: { entitySuffix: "zzz_battery_charge", label: "Battery Charge", max: 240, icon: "\u{1F50B}" },
+    stamina: { entitySuffix: "battery_charge", label: "Battery Charge", max: 240, icon: "\u{1F50B}" },
     extras: [
-      { entitySuffix: "zzz_engagement", label: "Engagement", max_attr: "max", icon: "\u{1F4AA}" },
-      { entitySuffix: "zzz_card_punch", label: "Card Punch", icon: "\u{1F0CF}", isText: true },
-      { entitySuffix: "zzz_bounty", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}" },
-      { entitySuffix: "zzz_investigation_points", label: "Investigation", max_attr: "max", icon: "\u{1F50D}" },
+      { entitySuffix: "engagement_value", label: "Engagement", max_attr: "max", icon: "\u{1F4AA}" },
+      { entitySuffix: "card_punch", label: "Card Punch", icon: "\u{1F0CF}", isText: true },
+      { entitySuffix: "bounty_commission", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}" },
+      { entitySuffix: "investigation_points", label: "Investigation", max_attr: "max", icon: "\u{1F50D}" },
     ],
-    recoveryEntitySuffix: "zzz_battery_recovery_time",
+    recoveryEntitySuffix: "battery_recovery_time",
   },
   hi3: {
     name: "Honkai Impact 3rd",
+    entityPrefix: "honkai_impact_3rd",
     accent: "#f87171",
     bg: "linear-gradient(135deg, #0f0505 0%, #200a0a 100%)",
     headerBg: "rgba(248,113,113,0.12)",
     emoji: "\u{1F300}",
-    stamina: { entitySuffix: "hi3_stamina", label: "Stamina", max: 180, icon: "\u26A1" },
+    stamina: { entitySuffix: "stamina", label: "Stamina", max: 180, icon: "\u26A1" },
     extras: [
-      { entitySuffix: "hi3_bounty", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}" },
-      { entitySuffix: "hi3_weekly_elite_dungeon", label: "Weekly Dungeon", max_attr: "max", icon: "\u{1F3F0}" },
+      { entitySuffix: "bounty", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}" },
+      { entitySuffix: "weekly_elite_dungeon", label: "Weekly Dungeon", max_attr: "max", icon: "\u{1F3F0}" },
     ],
-    recoveryEntitySuffix: "hi3_stamina_recovery_time",
+    recoveryEntitySuffix: "stamina_recovery_time",
   },
 };
 
@@ -108,12 +112,14 @@ class HoyoverseCard extends HTMLElement {
 
   getCardSize() { return 3; }
 
-  // Find entity whose entity_id contains the suffix
+  // Find entity whose entity_id matches the game prefix and suffix
   _findEntity(suffix) {
     if (!this._hass) return null;
+    const gc = GAME_CONFIG[this._config.game];
+    const prefix = gc.entityPrefix;
     const states = this._hass.states;
     const key = Object.keys(states).find(
-      id => id.includes(suffix) && id.startsWith("sensor.")
+      id => id.startsWith("sensor.") && id.includes(prefix) && id.endsWith(suffix)
     );
     return key ? states[key] : null;
   }
@@ -336,7 +342,7 @@ class HoyoverseCard extends HTMLElement {
       .getElementById("refresh-btn")
       ?.addEventListener("click", () => this._hass?.callService("homeassistant", "update_entity", {
         entity_id: Object.keys(this._hass?.states ?? {}).filter(
-          id => id.includes(`sensor.hoyoverse_${this._config.game}`)
+          id => id.startsWith("sensor.") && id.includes(gc.entityPrefix)
         ),
       }));
   }

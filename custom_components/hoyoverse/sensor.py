@@ -12,11 +12,14 @@ from homeassistant.components.sensor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfTime
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceEntryType
+from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
     DOMAIN,
+    GAME_NAMES,
     GAME_GENSHIN, GAME_HSR, GAME_ZZZ, GAME_HI3,
     SENSOR_GENSHIN_RESIN, SENSOR_GENSHIN_RESIN_RECOVERY,
     SENSOR_GENSHIN_COMMISSIONS, SENSOR_GENSHIN_COMMISSION_CLAIMED,
@@ -354,6 +357,11 @@ class HoyoSensor(CoordinatorEntity[HoyoverseCoordinator], SensorEntity):
         self.entity_description = description
         self._attr_unique_id = f"{entry_id}_{description.key}"
         self._attr_has_entity_name = True
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, f"{entry_id}_{description.game}")},
+            name=GAME_NAMES[description.game],
+            entry_type=DeviceEntryType.SERVICE,
+        )
 
     @property
     def native_value(self) -> Any:
