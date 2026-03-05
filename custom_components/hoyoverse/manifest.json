@@ -1,12 +1,12 @@
 {
   "domain": "hoyoverse",
   "name": "HoYoverse",
-  "codeowners": ["@y-yam"],
+  "codeowners": ["@Liesegang"],
   "config_flow": true,
-  "documentation": "https://github.com/y-yam/ha-hoyolab",
+  "documentation": "https://github.com/Liesegang/ha-hoyolab",
   "integration_type": "service",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/y-yam/ha-hoyolab/issues",
+  "issue_tracker": "https://github.com/Liesegang/ha-hoyolab/issues",
   "requirements": [],
   "version": "1.0.0"
 }
