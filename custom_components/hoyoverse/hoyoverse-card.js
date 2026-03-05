@@ -37,7 +37,6 @@ const GAME_CONFIG = {
       { entityId: "sensor.hsr_simulated_universe", label: "Simulated Universe", max_attr: "max", icon: "\u{1F30C}", doneWhen: "max" },
       { entityId: "sensor.hsr_divergent_universe", label: "Divergent Universe", max_attr: "max", icon: "\u{1F300}", doneWhen: "max" },
       { entityId: "sensor.hsr_currency_wars", label: "Currency Wars", max_attr: "max", icon: "\u{1F4B0}", doneWhen: "max" },
-      { entityId: "sensor.hsr_expeditions", label: "Assignments", max_attr: "max", icon: "\u{1F5FA}\uFE0F", doneWhen: "max" },
     ],
     recoveryEntityId: "sensor.hsr_stamina_recovery_time",
   },
