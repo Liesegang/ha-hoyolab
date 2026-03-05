@@ -1,9 +1,9 @@
 """The HoYoverse integration."""
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
-from homeassistant.components.frontend import add_extra_js_url
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -11,16 +11,17 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN, PLATFORMS
 from .coordinator import HoyoverseCoordinator
 
+_LOGGER = logging.getLogger(__name__)
+
 CARD_URL = f"/{DOMAIN}/hoyoverse-card.js"
 CARD_FILE = Path(__file__).parent / "hoyoverse-card.js"
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
-    """Register the card JS as a frontend extra module."""
+    """Register the static path for the card JS."""
     await hass.http.async_register_static_paths(
         [StaticPathConfig(CARD_URL, str(CARD_FILE), cache_headers=False)]
     )
-    add_extra_js_url(hass, CARD_URL)
     return True
 
 
