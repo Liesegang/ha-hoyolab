@@ -1,7 +1,6 @@
 """The HoYoverse integration."""
 from __future__ import annotations
 
-import logging
 from pathlib import Path
 
 from homeassistant.components.http import StaticPathConfig
@@ -10,8 +9,6 @@ from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN, PLATFORMS
 from .coordinator import HoyoverseCoordinator
-
-_LOGGER = logging.getLogger(__name__)
 
 CARD_URL = f"/{DOMAIN}/hoyoverse-card.js"
 CARD_FILE = Path(__file__).parent / "hoyoverse-card.js"
