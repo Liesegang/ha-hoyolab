@@ -13,13 +13,16 @@ from .coordinator import HoyoverseCoordinator
 
 CARD_URL = f"/{DOMAIN}/hoyoverse-card.js"
 CARD_FILE = Path(__file__).parent / "hoyoverse-card.js"
+ICONS_URL = f"/{DOMAIN}/icons"
+ICONS_DIR = Path(__file__).parent / "icons"
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
-    """Register the static path and Lovelace resource for the card JS."""
-    await hass.http.async_register_static_paths(
-        [StaticPathConfig(CARD_URL, str(CARD_FILE), cache_headers=False)]
-    )
+    """Register static paths and Lovelace resource for card JS."""
+    await hass.http.async_register_static_paths([
+        StaticPathConfig(CARD_URL, str(CARD_FILE), cache_headers=False),
+        StaticPathConfig(ICONS_URL, str(ICONS_DIR), cache_headers=True),
+    ])
     add_extra_js_url(hass, CARD_URL)
     return True
 

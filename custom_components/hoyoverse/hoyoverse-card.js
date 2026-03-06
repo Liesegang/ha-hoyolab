@@ -4,64 +4,59 @@
  * Supports: Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, Honkai Impact 3rd
  */
 
-// doneWhen values:
-//   "max"     - done when val >= max
-//   "zero"    - done when val <= 0
-//   "done"    - done when text val is "Done"
-//   "hasTime" - done when val is not "Ready" and not "Not obtained" (transformer)
-//   null      - no done highlighting
+const ICON_BASE = "/hoyoverse/icons";
 
 const GAME_CONFIG = {
   genshin: {
     name: "Genshin Impact",
     accent: "#5b9bd5",
-    emoji: "\u{1F33F}",
+    icon: `${ICON_BASE}/genshin.png`,
     stamina: { entityId: "sensor.genshin_resin", label: "Original Resin", max: 200, icon: "\u{1F9EA}" },
     extras: [
-      { entityId: "sensor.genshin_commissions", label: "Commissions", max_attr: "total", icon: "\u{1F4CB}", doneWhen: "max" },
-      { entityId: "sensor.genshin_realm_currency", label: "Realm Currency", max_attr: "max_realm_currency", icon: "\u{1F3E0}", timeAttr: "recovery_time_seconds" },
-      { entityId: "sensor.genshin_trounce_blossom", label: "Trounce Blossom", max_attr: "max", icon: "\u{1F338}", doneWhen: "zero" },
-      { entityId: "sensor.genshin_expeditions", label: "Expeditions", max_attr: "max", icon: "\u{1F5FA}\uFE0F", timeAttr: "max_remaining_time", doneWhen: "max" },
-      { entityId: "sensor.genshin_transformer_ready", label: "Transformer", icon: "\u2697\uFE0F", isText: true, doneWhen: "hasTime" },
+      { id: "commissions", entityId: "sensor.genshin_commissions", label: "Commissions", max_attr: "total", icon: "\u{1F4CB}", doneWhen: "max" },
+      { id: "realm_currency", entityId: "sensor.genshin_realm_currency", label: "Realm Currency", max_attr: "max_realm_currency", icon: "\u{1F3E0}", timeAttr: "recovery_time_seconds" },
+      { id: "trounce", entityId: "sensor.genshin_trounce_blossom", label: "Trounce Blossom", max_attr: "max", icon: "\u{1F338}", doneWhen: "zero" },
+      { id: "expeditions", entityId: "sensor.genshin_expeditions", label: "Expeditions", max_attr: "max", icon: "\u{1F5FA}\uFE0F", timeAttr: "max_remaining_time", doneWhen: "max" },
+      { id: "transformer", entityId: "sensor.genshin_transformer_ready", label: "Transformer", icon: "\u2697\uFE0F", isText: true, doneWhen: "hasTime" },
     ],
     recoveryEntityId: "sensor.genshin_resin_recovery_time",
   },
   hsr: {
     name: "Honkai: Star Rail",
     accent: "#a78bfa",
-    emoji: "\u26A1",
+    icon: `${ICON_BASE}/hsr.png`,
     stamina: { entityId: "sensor.hsr_stamina", label: "Trailblaze Power", max: 300, icon: "\u26A1", showReserve: true },
     extras: [
-      { entityId: "sensor.hsr_daily_training", label: "Daily Training", max_attr: "max", icon: "\u{1F4DA}", doneWhen: "max" },
-      { entityId: "sensor.hsr_echo_of_war", label: "Echo of War", max_attr: "max", icon: "\u2694\uFE0F", doneWhen: "zero" },
-      { entityId: "sensor.hsr_simulated_universe", label: "Simulated Universe", max_attr: "max", icon: "\u{1F30C}", doneWhen: "max" },
-      { entityId: "sensor.hsr_divergent_universe", label: "Divergent Universe", max_attr: "max", icon: "\u{1F300}", doneWhen: "max" },
-      { entityId: "sensor.hsr_currency_wars", label: "Currency Wars", max_attr: "max", icon: "\u{1F4B0}", doneWhen: "max" },
+      { id: "daily_training", entityId: "sensor.hsr_daily_training", label: "Daily Training", max_attr: "max", icon: "\u{1F4DA}", doneWhen: "max" },
+      { id: "echo_of_war", entityId: "sensor.hsr_echo_of_war", label: "Echo of War", max_attr: "max", icon: "\u2694\uFE0F", doneWhen: "zero" },
+      { id: "simulated_universe", entityId: "sensor.hsr_simulated_universe", label: "Simulated Universe", max_attr: "max", icon: "\u{1F30C}", doneWhen: "max" },
+      { id: "divergent_universe", entityId: "sensor.hsr_divergent_universe", label: "Divergent Universe", max_attr: "max", icon: "\u{1F300}", doneWhen: "max" },
+      { id: "currency_wars", entityId: "sensor.hsr_currency_wars", label: "Currency Wars", max_attr: "max", icon: "\u{1F4B0}", doneWhen: "max" },
     ],
     recoveryEntityId: "sensor.hsr_stamina_recovery_time",
   },
   zzz: {
     name: "Zenless Zone Zero",
     accent: "#e8882d",
-    emoji: "\u{1F50B}",
+    icon: `${ICON_BASE}/zzz.png`,
     stamina: { entityId: "sensor.zzz_battery_charge", label: "Battery Charge", max: 240, icon: "\u{1F50B}" },
     extras: [
-      { entityId: "sensor.zzz_engagement", label: "Engagement", max_attr: "max", icon: "\u{1F4AA}", doneWhen: "max" },
-      { entityId: "sensor.zzz_vhs_store", label: "VHS Store", icon: "\u{1F4FC}", isText: true, doneWhen: "open" },
-      { entityId: "sensor.zzz_card_punch", label: "Scratch Card", icon: "\u{1F0CF}", isText: true, doneWhen: "done" },
-      { entityId: "sensor.zzz_bounty", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}", doneWhen: "max" },
-      { entityId: "sensor.zzz_weekly_task", label: "Weekly Task", max_attr: "max", icon: "\u{1F4C5}", doneWhen: "max" },
+      { id: "engagement", entityId: "sensor.zzz_engagement", label: "Engagement", max_attr: "max", icon: "\u{1F4AA}", doneWhen: "max" },
+      { id: "vhs_store", entityId: "sensor.zzz_vhs_store", label: "VHS Store", icon: "\u{1F4FC}", isText: true, doneWhen: "open" },
+      { id: "scratch_card", entityId: "sensor.zzz_card_punch", label: "Scratch Card", icon: "\u{1F0CF}", isText: true, doneWhen: "done" },
+      { id: "bounty", entityId: "sensor.zzz_bounty", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}", doneWhen: "max" },
+      { id: "weekly_task", entityId: "sensor.zzz_weekly_task", label: "Weekly Task", max_attr: "max", icon: "\u{1F4C5}", doneWhen: "max" },
     ],
     recoveryEntityId: "sensor.zzz_battery_recovery_time",
   },
   hi3: {
     name: "Honkai Impact 3rd",
     accent: "#7b68ee",
-    emoji: "\u{1F300}",
+    icon: `${ICON_BASE}/hi3.png`,
     stamina: { entityId: "sensor.hi3_stamina", label: "Stamina", max: 180, icon: "\u26A1" },
     extras: [
-      { entityId: "sensor.hi3_bounty", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}" },
-      { entityId: "sensor.hi3_weekly_elite_dungeon", label: "Weekly Dungeon", max_attr: "max", icon: "\u{1F3F0}" },
+      { id: "bounty", entityId: "sensor.hi3_bounty", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}" },
+      { id: "weekly_dungeon", entityId: "sensor.hi3_weekly_elite_dungeon", label: "Weekly Dungeon", max_attr: "max", icon: "\u{1F3F0}" },
     ],
     recoveryEntityId: "sensor.hi3_stamina_recovery_time",
   },
@@ -76,7 +71,7 @@ function secondsToHuman(secs) {
 }
 
 function isDone(val, attrs, e) {
-  if (!e.doneWhen) return null; // no highlighting
+  if (!e.doneWhen) return null;
   switch (e.doneWhen) {
     case "max": {
       const max = e.max_attr ? attrs[e.max_attr] : null;
@@ -135,6 +130,17 @@ class HoyoverseCard extends HTMLElement {
     return this._hass.states[entityId] ?? null;
   }
 
+  _accent() {
+    const gc = GAME_CONFIG[this._config.game];
+    return this._config.accent || gc.accent;
+  }
+
+  _isExtraVisible(extraId) {
+    const hidden = this._config.hidden_extras;
+    if (!hidden || !Array.isArray(hidden)) return true;
+    return !hidden.includes(extraId);
+  }
+
   _staminaPercent(current, max) {
     if (current == null || max == null || max === 0) return 0;
     return Math.min(100, Math.round((Number(current) / Number(max)) * 100));
@@ -148,7 +154,7 @@ class HoyoverseCard extends HTMLElement {
       </div>`;
   }
 
-  _renderStamina(gc) {
+  _renderStamina(gc, accent) {
     const staminaCfg = gc.stamina;
     const entity = this._getEntity(staminaCfg.entityId);
     const recovEntity = this._getEntity(gc.recoveryEntityId);
@@ -159,7 +165,6 @@ class HoyoverseCard extends HTMLElement {
     const recovery = recovEntity ? Number(recovEntity.state) : null;
     const pct = this._staminaPercent(current, max);
 
-    // Reserve power (HSR) – read from separate entity
     let reserveHtml = "";
     if (staminaCfg.showReserve) {
       const reserveEntity = this._getEntity("sensor.hsr_reserve_stamina");
@@ -168,7 +173,7 @@ class HoyoverseCard extends HTMLElement {
       if (reserve != null) {
         reserveHtml = `
           <div class="reserve-info">
-            \u{1F50B} Reserve: ${reserve}/2400${reserveFull ? " (Full)" : ""} <span class="reserve-note">x1/3</span>
+            \u{1F50B} Reserve: ${reserve}/2400${reserveFull ? " (Full)" : ""}
           </div>`;
       }
     }
@@ -178,11 +183,11 @@ class HoyoverseCard extends HTMLElement {
         <div class="stamina-header">
           <span class="stamina-icon">${staminaCfg.icon}</span>
           <span class="stamina-label">${staminaCfg.label}</span>
-          <span class="stamina-value" style="color:${pct >= 100 ? "var(--success-color, #34d399)" : gc.accent}">
+          <span class="stamina-value" style="color:${pct >= 100 ? "var(--success-color, #34d399)" : accent}">
             ${current ?? "\u2014"}/${max}
           </span>
         </div>
-        ${this._renderProgressBar(pct, gc.accent)}
+        ${this._renderProgressBar(pct, accent)}
         <div class="recovery-time">
           ${pct >= 100
         ? `<span style="color:var(--success-color, #34d399)">\u25CF Full</span>`
@@ -193,8 +198,9 @@ class HoyoverseCard extends HTMLElement {
       </div>`;
   }
 
-  _renderExtras(gc) {
+  _renderExtras(gc, accent) {
     const items = gc.extras
+      .filter(e => this._isExtraVisible(e.id))
       .map(e => {
         const entity = this._getEntity(e.entityId);
         if (!entity) return "";
@@ -218,7 +224,7 @@ class HoyoverseCard extends HTMLElement {
         const max = e.max_attr ? attrs[e.max_attr] : null;
         const display = max != null ? `${val}/${max}` : val;
         const pct = max ? this._staminaPercent(val, max) : null;
-        const barColor = pct != null && pct >= 100 ? "var(--success-color, #34d399)" : gc.accent;
+        const barColor = pct != null && pct >= 100 ? "var(--success-color, #34d399)" : accent;
         const timeLeft = e.timeAttr && attrs[e.timeAttr] ? secondsToHuman(Number(attrs[e.timeAttr])) : null;
 
         return `
@@ -239,7 +245,7 @@ class HoyoverseCard extends HTMLElement {
       : "";
   }
 
-  _getStyles(gc) {
+  _getStyles(accent) {
     return `
       :host { display: block; }
       ha-card {
@@ -253,11 +259,16 @@ class HoyoverseCard extends HTMLElement {
         gap: 10px;
         border-bottom: 1px solid var(--divider-color, rgba(255,255,255,0.07));
       }
-      .header-emoji { font-size: 22px; }
+      .header-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        object-fit: contain;
+      }
       .header-title {
         font-size: 15px;
         font-weight: 700;
-        color: ${gc.accent};
+        color: ${accent};
         letter-spacing: 0.02em;
         flex: 1;
       }
@@ -275,7 +286,6 @@ class HoyoverseCard extends HTMLElement {
       .header-refresh:hover { opacity: 1; background: rgba(127,127,127,0.15); }
       .body { padding: 16px; }
 
-      /* Stamina */
       .stamina-section { margin-bottom: 16px; }
       .stamina-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
       .stamina-icon { font-size: 18px; }
@@ -297,12 +307,8 @@ class HoyoverseCard extends HTMLElement {
         color: var(--secondary-text-color, #888);
         margin-top: 4px;
       }
-      .reserve-note {
-        opacity: 0.6;
-        font-size: 11px;
-      }
 
-      /* Extras */
+
       .extras-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -344,18 +350,19 @@ class HoyoverseCard extends HTMLElement {
   _render() {
     if (!this._config || !this.shadowRoot) return;
     const gc = GAME_CONFIG[this._config.game];
+    const accent = this._accent();
 
     const body = `
-      <style>${this._getStyles(gc)}</style>
+      <style>${this._getStyles(accent)}</style>
       <ha-card>
         <div class="header">
-          <span class="header-emoji">${gc.emoji}</span>
+          <img class="header-icon" src="${gc.icon}" alt="${gc.name}">
           <span class="header-title">${gc.name}</span>
           <button class="header-refresh" id="refresh-btn" title="Refresh">\u21BB</button>
         </div>
         <div class="body">
-          ${this._renderStamina(gc)}
-          ${this._renderExtras(gc)}
+          ${this._renderStamina(gc, accent)}
+          ${this._renderExtras(gc, accent)}
         </div>
       </ha-card>`;
 
@@ -363,7 +370,8 @@ class HoyoverseCard extends HTMLElement {
     this.shadowRoot
       .getElementById("refresh-btn")
       ?.addEventListener("click", () => {
-        const ids = [gc.stamina.entityId, gc.recoveryEntityId, ...gc.extras.map(e => e.entityId)];
+        const visibleExtras = gc.extras.filter(e => this._isExtraVisible(e.id));
+        const ids = [gc.stamina.entityId, gc.recoveryEntityId, ...visibleExtras.map(e => e.entityId)];
         this._hass?.callService("homeassistant", "update_entity", { entity_id: ids });
       });
   }
@@ -389,23 +397,45 @@ class HoyoverseCardEditor extends HTMLElement {
     this._hass = hass;
   }
 
+  _fireChanged() {
+    this.dispatchEvent(new CustomEvent("config-changed", {
+      detail: { config: { ...this._config } },
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
   _render() {
-    const games = Object.entries(GAME_CONFIG).map(
-      ([key, gc]) => `<option value="${key}" ${this._config.game === key ? "selected" : ""}>${gc.emoji} ${gc.name}</option>`
+    const game = this._config.game || "genshin";
+    const gc = GAME_CONFIG[game];
+    const accent = this._config.accent || gc?.accent || "#5b9bd5";
+    const hidden = this._config.hidden_extras || [];
+
+    const gameOptions = Object.entries(GAME_CONFIG).map(
+      ([key, g]) => `<option value="${key}" ${game === key ? "selected" : ""}>${g.name}</option>`
     ).join("");
+
+    const extrasToggles = gc ? gc.extras.map(e => {
+      const checked = !hidden.includes(e.id);
+      return `
+        <label class="toggle-row">
+          <input type="checkbox" data-extra-id="${e.id}" ${checked ? "checked" : ""}>
+          <span>${e.icon} ${e.label}</span>
+        </label>`;
+    }).join("") : "";
 
     this.shadowRoot.innerHTML = `
       <style>
         .editor { padding: 16px; }
-        .field { margin-bottom: 12px; }
-        label {
+        .field { margin-bottom: 16px; }
+        .field-label {
           display: block;
           font-size: 13px;
           font-weight: 500;
           color: var(--primary-text-color, #333);
           margin-bottom: 4px;
         }
-        select {
+        select, input[type="color"] {
           width: 100%;
           padding: 8px 12px;
           border-radius: 8px;
@@ -414,26 +444,110 @@ class HoyoverseCardEditor extends HTMLElement {
           color: var(--primary-text-color, #333);
           font-size: 14px;
           cursor: pointer;
+          box-sizing: border-box;
+        }
+        input[type="color"] {
+          height: 40px;
+          padding: 4px;
+        }
+        .color-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .color-row input[type="color"] {
+          width: 50px;
+          flex-shrink: 0;
+        }
+        .color-row .color-hex {
+          flex: 1;
+          font-size: 13px;
+          color: var(--secondary-text-color, #888);
+        }
+        .color-row button {
+          font-size: 12px;
+          padding: 4px 8px;
+          border-radius: 6px;
+          border: 1px solid var(--divider-color, #ccc);
+          background: var(--input-fill-color, #fff);
+          color: var(--primary-text-color, #333);
+          cursor: pointer;
+        }
+        .toggle-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 0;
+          font-size: 13px;
+          color: var(--primary-text-color, #333);
+          cursor: pointer;
+        }
+        .toggle-row input[type="checkbox"] {
+          width: 16px;
+          height: 16px;
+          cursor: pointer;
         }
       </style>
       <div class="editor">
         <div class="field">
-          <label>Game</label>
-          <select id="game-select">
-            ${games}
-          </select>
+          <label class="field-label">Game</label>
+          <select id="game-select">${gameOptions}</select>
+        </div>
+        <div class="field">
+          <label class="field-label">Accent Color</label>
+          <div class="color-row">
+            <input type="color" id="accent-color" value="${accent}">
+            <span class="color-hex">${accent}</span>
+            <button id="reset-color">Reset</button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Visible Panels</label>
+          ${extrasToggles}
         </div>
       </div>`;
 
+    // Game select
     this.shadowRoot.getElementById("game-select")
       .addEventListener("change", (ev) => {
         this._config = { ...this._config, game: ev.target.value };
-        this.dispatchEvent(new CustomEvent("config-changed", {
-          detail: { config: this._config },
-          bubbles: true,
-          composed: true,
-        }));
+        delete this._config.accent;
+        delete this._config.hidden_extras;
+        this._fireChanged();
+        this._render();
       });
+
+    // Accent color
+    this.shadowRoot.getElementById("accent-color")
+      .addEventListener("input", (ev) => {
+        this._config = { ...this._config, accent: ev.target.value };
+        this._fireChanged();
+        this.shadowRoot.querySelector(".color-hex").textContent = ev.target.value;
+      });
+
+    // Reset color
+    this.shadowRoot.getElementById("reset-color")
+      .addEventListener("click", () => {
+        delete this._config.accent;
+        this._fireChanged();
+        this._render();
+      });
+
+    // Extra toggles
+    this.shadowRoot.querySelectorAll("input[data-extra-id]").forEach(cb => {
+      cb.addEventListener("change", () => {
+        const id = cb.dataset.extraId;
+        let hidden = [...(this._config.hidden_extras || [])];
+        if (cb.checked) {
+          hidden = hidden.filter(h => h !== id);
+        } else {
+          if (!hidden.includes(id)) hidden.push(id);
+        }
+        this._config = { ...this._config, hidden_extras: hidden };
+        if (hidden.length === 0) delete this._config.hidden_extras;
+        this._fireChanged();
+      });
+    });
   }
 }
 
@@ -449,7 +563,7 @@ window.customCards.push({
 });
 
 console.info(
-  `%c HOYOVERSE-CARD %c v1.0.0 `,
+  `%c HOYOVERSE-CARD %c v1.1.0 `,
   "color:#fff;background:#5b9bd5;font-weight:bold;padding:2px 6px;border-radius:3px 0 0 3px",
   "color:#5b9bd5;background:#1a1a1a;padding:2px 6px;border-radius:0 3px 3px 0"
 );
