@@ -31,7 +31,7 @@ GAME_NAMES = {
     GAME_HI3: "Honkai Impact 3rd",
 }
 
-# Server options
+# Server options (kept for config_flow UI)
 GENSHIN_SERVERS = {
     "os_asia": "Asia",
     "os_usa": "North America",
@@ -57,26 +57,14 @@ HI3_SERVERS = {
     "overseas01": "Global",
 }
 
-# API
-API_BASE_OS = "https://bbs-api-os.hoyolab.com"
-API_BASE_SG = "https://sg-public-api.hoyolab.com"
-
-API_ENDPOINTS = {
-    GAME_GENSHIN: f"{API_BASE_OS}/game_record/app/genshin/api/dailyNote",
-    GAME_HSR:     f"{API_BASE_SG}/event/game_record/hkrpg/api/note",
-    GAME_ZZZ:     f"{API_BASE_SG}/event/game_record_zzz/api/zzz/note",
-    GAME_HI3:     f"{API_BASE_OS}/game_record/honkai3rd/api/note",
-}
-
-DS_SALT_OVERSEAS = "6s25p5ox5y14umn1p61aqyyvbvvl3lrt"
-APP_VERSION = "2.55.0"
-
-# Sensor keys  ----------------------------------------------------------------
+# Sensor keys
 # Genshin
 SENSOR_GENSHIN_RESIN = "genshin_resin"
 SENSOR_GENSHIN_RESIN_RECOVERY = "genshin_resin_recovery_time"
 SENSOR_GENSHIN_COMMISSIONS = "genshin_commissions"
-SENSOR_GENSHIN_COMMISSION_CLAIMED = "genshin_commission_reward_claimed"
+SENSOR_GENSHIN_COMMISSION_CLAIMED = (
+    "genshin_commission_reward_claimed"
+)
 SENSOR_GENSHIN_REALM_CURRENCY = "genshin_realm_currency"
 SENSOR_GENSHIN_EXPEDITIONS = "genshin_expeditions"
 SENSOR_GENSHIN_TRANSFORMER = "genshin_transformer_ready"

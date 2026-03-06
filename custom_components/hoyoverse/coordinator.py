@@ -2,49 +2,44 @@
 from __future__ import annotations
 
 import asyncio
-import hashlib
 import logging
-import random
-import string
-import time
 from datetime import timedelta
 from typing import Any
 
-import aiohttp
+import genshin
 
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import (
+    DataUpdateCoordinator,
+    UpdateFailed,
+)
 
 from .const import (
     DOMAIN,
     UPDATE_INTERVAL_MINUTES,
     GAME_GENSHIN, GAME_HSR, GAME_ZZZ, GAME_HI3,
-    API_ENDPOINTS,
-    DS_SALT_OVERSEAS,
-    APP_VERSION,
     CONF_LTOKEN, CONF_LTUID,
-    CONF_GENSHIN_UID, CONF_GENSHIN_SERVER,
-    CONF_HSR_UID, CONF_HSR_SERVER,
-    CONF_ZZZ_UID, CONF_ZZZ_SERVER,
-    CONF_HI3_UID, CONF_HI3_SERVER,
+    CONF_GENSHIN_UID,
+    CONF_HSR_UID,
+    CONF_ZZZ_UID,
+    CONF_HI3_UID,
 )
 
 _LOGGER = logging.getLogger(__name__)
 
 GAME_UID_KEYS = {
-    GAME_GENSHIN: (CONF_GENSHIN_UID, CONF_GENSHIN_SERVER),
-    GAME_HSR:     (CONF_HSR_UID,     CONF_HSR_SERVER),
-    GAME_ZZZ:     (CONF_ZZZ_UID,     CONF_ZZZ_SERVER),
-    GAME_HI3:     (CONF_HI3_UID,     CONF_HI3_SERVER),
+    GAME_GENSHIN: CONF_GENSHIN_UID,
+    GAME_HSR: CONF_HSR_UID,
+    GAME_ZZZ: CONF_ZZZ_UID,
+    GAME_HI3: CONF_HI3_UID,
 }
 
-
-def _generate_ds(salt: str = DS_SALT_OVERSEAS) -> str:
-    """Generate the DS header for HoYoLAB API authentication."""
-    t = int(time.time())
-    r = "".join(random.choices(string.ascii_letters + string.digits, k=6))
-    h = hashlib.md5(f"salt={salt}&t={t}&r={r}".encode()).hexdigest()
-    return f"{t},{r},{h}"
+GAME_FETCH = {
+    GAME_GENSHIN: "get_genshin_notes",
+    GAME_HSR: "get_starrail_notes",
+    GAME_ZZZ: "get_zzz_notes",
+    GAME_HI3: "get_honkai_notes",
+}
 
 
 class HoyoverseCoordinator(DataUpdateCoordinator[dict[str, Any]]):
@@ -58,75 +53,41 @@ class HoyoverseCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             update_interval=timedelta(minutes=UPDATE_INTERVAL_MINUTES),
         )
         self._config = config
-        self._ltoken = config[CONF_LTOKEN]
-        self._ltuid = config[CONF_LTUID]
+        self._client = genshin.Client(
+            cookies={
+                "ltoken_v2": config[CONF_LTOKEN],
+                "ltuid_v2": config[CONF_LTUID],
+            },
+            lang="en-us",
+        )
 
-    def _get_headers(self) -> dict[str, str]:
-        return {
-            "Cookie": f"ltoken_v2={self._ltoken}; ltuid_v2={self._ltuid}",
-            "x-rpc-app_version": APP_VERSION,
-            "x-rpc-client_type": "5",
-            "x-rpc-language": "en-us",
-            "DS": _generate_ds(),
-            "Accept": "application/json, text/plain, */*",
-            "User-Agent": (
-                f"Mozilla/5.0 miHoYoBBS/{APP_VERSION}"
-            ),
-            "Referer": "https://act.hoyolab.com",
-            "Origin": "https://act.hoyolab.com",
-        }
-
-    async def _fetch_game(
-        self,
-        session: aiohttp.ClientSession,
-        game: str,
-        uid: str,
-        server: str,
-    ) -> dict[str, Any]:
-        """Fetch real-time notes for one game."""
-        url = API_ENDPOINTS[game]
-        params = {"server": server, "role_id": uid}
-        try:
-            async with session.get(
-                url,
-                params=params,
-                headers=self._get_headers(),
-                timeout=aiohttp.ClientTimeout(total=15),
-            ) as resp:
-                resp.raise_for_status()
-                body = await resp.json()
-        except aiohttp.ClientError as err:
-            raise UpdateFailed(f"[{game}] HTTP error: {err}") from err
-
-        retcode = body.get("retcode", -1)
-        if retcode == -100:
-            raise UpdateFailed(f"[{game}] Cookie expired or invalid (retcode={retcode})")
-        if retcode != 0:
-            raise UpdateFailed(
-                f"[{game}] API error retcode={retcode}: {body.get('message', 'unknown')}"
-            )
-        return body.get("data", {})
+    async def _fetch_game(self, game: str, uid: int) -> Any:
+        """Fetch real-time notes for one game via genshin.py."""
+        method = getattr(self._client, GAME_FETCH[game])
+        return await method(uid)
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch data for all enabled games concurrently."""
         tasks: dict[str, asyncio.Task] = {}
         result: dict[str, Any] = {}
 
-        async with aiohttp.ClientSession() as session:
-            for game, (uid_key, server_key) in GAME_UID_KEYS.items():
-                uid = self._config.get(uid_key, "").strip()
-                server = self._config.get(server_key, "").strip()
-                if uid and server:
-                    tasks[game] = asyncio.create_task(
-                        self._fetch_game(session, game, uid, server)
-                    )
+        for game, uid_key in GAME_UID_KEYS.items():
+            uid_str = self._config.get(uid_key, "").strip()
+            if uid_str:
+                tasks[game] = asyncio.create_task(
+                    self._fetch_game(game, int(uid_str))
+                )
 
-            if not tasks:
-                raise UpdateFailed("No games configured")
+        if not tasks:
+            raise UpdateFailed("No games configured")
 
-            done = await asyncio.gather(*tasks.values(), return_exceptions=True)
+        done = await asyncio.gather(*tasks.values(), return_exceptions=True)
 
         for game, outcome in zip(tasks.keys(), done):
+            if isinstance(outcome, genshin.errors.InvalidCookies):
+                raise UpdateFailed(
+                    f"[{game}] Cookie expired or invalid"
+                ) from outcome
             if isinstance(outcome, Exception):
                 _LOGGER.warning("Failed to fetch %s data: %s", game, outcome)
                 result[game] = None
