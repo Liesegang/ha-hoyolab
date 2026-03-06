@@ -47,7 +47,7 @@ const GAME_CONFIG = {
     stamina: { entityId: "sensor.zzz_battery_charge", label: "Battery Charge", max: 240, icon: "\u{1F50B}" },
     extras: [
       { entityId: "sensor.zzz_engagement", label: "Engagement", max_attr: "max", icon: "\u{1F4AA}", doneWhen: "max" },
-      { entityId: "sensor.zzz_vhs_store", label: "VHS Store", icon: "\u{1F4FC}", isText: true, doneWhen: "done" },
+      { entityId: "sensor.zzz_vhs_store", label: "VHS Store", icon: "\u{1F4FC}", isText: true, doneWhen: "open" },
       { entityId: "sensor.zzz_card_punch", label: "Scratch Card", icon: "\u{1F0CF}", isText: true, doneWhen: "done" },
       { entityId: "sensor.zzz_bounty", label: "Bounty", max_attr: "max", icon: "\u{1F4DC}", doneWhen: "max" },
       { entityId: "sensor.zzz_weekly_task", label: "Weekly Task", max_attr: "max", icon: "\u{1F4C5}", doneWhen: "max" },
@@ -86,6 +86,8 @@ function isDone(val, attrs, e) {
       return Number(val) <= 0;
     case "done":
       return val === "Done";
+    case "open":
+      return val === "Open";
     case "hasTime":
       return val !== "Ready" && val !== "Not obtained";
     default:

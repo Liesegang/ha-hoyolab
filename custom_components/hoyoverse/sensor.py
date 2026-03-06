@@ -331,10 +331,10 @@ ZZZ_SENSORS: list[HoyoSensorDescription] = [
         name="VHS Store",
         game=GAME_ZZZ,
         icon="mdi:filmstrip",
-        value_fn=lambda d: (
-            "Done" if d.get("vhs_sale", {}).get("sale_state") == "SaleStateDone"
-            else "Not Done"
-        ),
+        value_fn=lambda d: {
+            "SaleStateDoing": "Open",
+            "SaleStateDone": "Revenue Available",
+        }.get(d.get("vhs_sale", {}).get("sale_state", ""), "Closed"),
     ),
     HoyoSensorDescription(
         key=SENSOR_ZZZ_WEEKLY_TASK,
